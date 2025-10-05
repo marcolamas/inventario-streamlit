@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -71,15 +72,21 @@ SHEET_TABLE = "Equipos"
 @st.cache_data(ttl=1000)
 def load_data():
     try:
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive.readonly"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credenciales.json", scope)
-        client = gspread.authorize(creds)
+        sa_info = st.secrets.get("gcp_service_account")
+        if sa_info is None:
+            raise Exception("No se encontró 'gcp_service_account' en st.secrets")
+
+        # si guardaste el JSON como string en st.secrets, conviértelo a dict
+        if isinstance(sa_info, str):
+            sa_info = json.loads(sa_info)
+
+        client = gspread.service_account_from_dict(sa_info)
         spreadsheet = client.open_by_url(SPREADSHEET_URL)
-        
+
         df_graph = pd.DataFrame(spreadsheet.worksheet(SHEET_GRAPH).get_all_records())
         df_table = pd.DataFrame(spreadsheet.worksheet(SHEET_TABLE).get_all_records())
         df_table = df_table.fillna("").astype(str)
-        
+
         return df_graph, df_table
     except Exception as e:
         st.error(f"Error al conectar con Google Sheets: {e}")
