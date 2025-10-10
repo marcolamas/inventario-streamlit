@@ -75,7 +75,7 @@ def load_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive.readonly"]
         # Usa st.secrets para mayor seguridad
-        creds_dict = st.secrets["google_credentials"]
+        creds_dict = st.secrets["gcp_service_account"]
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
         client = gspread.authorize(creds)
         ws = client.open_by_url(SPREADSHEET_URL).worksheet(SHEET_TABLE)
@@ -178,3 +178,4 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
+
