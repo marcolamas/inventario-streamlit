@@ -74,21 +74,21 @@ SHEET_TABLE = "Hoja 1"  # ajusta si tu pestaña tiene otro nombre
 def load_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive.readonly"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credenciales.json", scope)
+        # Usa st.secrets para mayor seguridad
+        creds_dict = st.secrets["google_credentials"]
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
         client = gspread.authorize(creds)
         ws = client.open_by_url(SPREADSHEET_URL).worksheet(SHEET_TABLE)
 
-        # --- Leer todas las filas ---
         values = ws.get_all_values()
-        if not values or len(values) <= 3:  # por si hay menos de 4 filas
+        if not values or len(values) <= 3:
             return pd.DataFrame()
 
-        # --- Empezar desde la fila 4 ---
-        header_row_index = 3  # fila 4 (0-based)
+        # Advertencia: Esta lógica es frágil. Si el formato de la hoja cambia, fallará.
+        # Se recomienda tener un formato de tabla estándar con encabezados en la primera fila.
+        header_row_index = 3
         raw_headers = values[header_row_index]
         headers = [h if str(h).strip() != "" else f"col{i}" for i, h in enumerate(raw_headers)]
-
-        # Filas de datos después de la fila de encabezados
         data = values[header_row_index + 1:]
 
         df = pd.DataFrame(data, columns=headers)
