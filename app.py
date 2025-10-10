@@ -73,7 +73,9 @@ SHEET_TABLE = "Equipos"
 def load_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive.readonly"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credenciales.json", scope)
+        creds_dict = st.secrets["google_credentials"]
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
         client = gspread.authorize(creds)
         
         spreadsheet = client.open_by_url(SPREADSHEET_URL)
