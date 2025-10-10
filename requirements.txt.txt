@@ -1,7 +1,0 @@
-streamlit
-pandas
-plotly
-gspread
-google-auth
-streamlit-aggrid
-oauth2client
