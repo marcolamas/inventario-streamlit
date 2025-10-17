@@ -79,6 +79,8 @@ def load_all_data():
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
         client = gspread.authorize(creds)
         ws = client.open_by_url(SPREADSHEET_URL).worksheet(SHEET_TABLE)
+        client = gspread.authorize(creds)
+        spreadsheet = client.open_by_url(SPREADSHEET_URL)
 
         ws_table = spreadsheet.worksheet(SHEET_TABLE)
         values = ws_table.get_all_values()
@@ -239,7 +241,6 @@ if plan_col is not None:
         media_plan_servicios = numeric_series.mean()
 
 with col1:
-    # Costo total de Planes y Servicios contratados (ACTIVOS)
     if total_plan_servicios is not None:
         st.markdown(
             f"""
@@ -257,7 +258,6 @@ with col1:
     else:
         st.info("No se encontró la columna de costos.")
 
-    # Media de gasto por Línea
     if media_plan_servicios is not None:
         st.markdown(
             f"""
@@ -275,7 +275,6 @@ with col1:
     else:
         st.info("No se encontró la columna de media de costos.")
 
-    # Total de equipos activos (tomado de df_gauges_data)
     activos = 0
     if not df_gauges_data.empty and 'Etiqueta' in df_gauges_data.columns and 'Equipos' in df_gauges_data.columns:
         activos_series = df_gauges_data[
@@ -349,6 +348,3 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
-
-
-
