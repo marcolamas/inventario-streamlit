@@ -39,7 +39,7 @@ st.markdown("""
 esp1, menu1, menu2, esp2 = st.columns([.01, 2, 2, 4])
 with menu1:
     if st.button("💻Equipos de computo", use_container_width=True):
-        st.switch_page("app")
+        st.switch_page("app.py")
 with menu2:
     if st.button("📱Equipos teléfonicos", use_container_width=True):
         st.rerun()
@@ -348,5 +348,6 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
+
 
 
