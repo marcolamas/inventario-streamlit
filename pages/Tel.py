@@ -133,7 +133,7 @@ def parse_numeric_value(x):
 
 df_table, df_gauges_data = load_all_data()
 
-st.markdown("# ")
+st.markdown("Resumen de líneas ACTIVAS")
 col1, col2, col3 = st.columns([2.5, 2.5, 2])
 with col2:
     if not df_table.empty and 'Estado' in df_table.columns:
@@ -246,7 +246,7 @@ with col1:
             f"""
             <div style="background-color: #0E1117; border-radius: 10px; padding: 15px; text-align: left;">
                 <p style="color: white; font-size: 15px; margin-bottom: 0px;">
-                    Costo total de Planes y Servicios contratados (ACTIVOS)
+                    Costo total de Planes y Servicios contratados
                 </p>
                 <p style="color: #00FF88; font-size: 30px; font-weight: bold; margin: 0;">
                     ${total_plan_servicios:,.2f}
@@ -348,6 +348,7 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
+
 
 
 
