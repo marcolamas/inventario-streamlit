@@ -133,7 +133,10 @@ def parse_numeric_value(x):
 
 df_table, df_gauges_data = load_all_data()
 
-st.markdown("  Resumen de líneas ACTIVAS")
+st.markdown(
+    "<p style='margin-left:30px;'>Resumen de líneas ACTIVAS</p>",
+    unsafe_allow_html=True
+)
 col1, col2, col3 = st.columns([2.5, 2.5, 2])
 with col2:
     if not df_table.empty and 'Estado' in df_table.columns:
@@ -348,6 +351,7 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
+
 
 
 
