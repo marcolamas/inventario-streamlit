@@ -71,7 +71,7 @@ SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1hUDaaqzQ_LKT71YTTwwyR
 SHEET_TABLE = "Hoja 1" 
 SHEET_GAUGES = "Web"
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=1000)
 def load_all_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive.readonly"]
@@ -348,6 +348,7 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
+
 
 
 
