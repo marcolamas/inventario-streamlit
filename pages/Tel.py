@@ -137,7 +137,7 @@ st.markdown(
     "<p style='margin-left:18px;'>Resumen de líneas ACTIVAS</p>",
     unsafe_allow_html=True
 )
-col1, col2, col3 = st.columns([2.5, 2.5, 2])
+col1, col2, col3 = st.columns([2, 3, 2])
 with col2:
     if not df_table.empty and 'Estado' in df_table.columns:
         try:
@@ -161,7 +161,7 @@ with col2:
 
             fig_area.update_traces(mode="lines", fill='tozeroy')
             fig_area.update_layout(
-                height=480,
+                height=490,
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 font_color='white',
@@ -176,7 +176,6 @@ with col2:
             st.error(f"No se pudo generar el gráfico: {e}")
     else:
         st.info("No se puede generar el gráfico. Se requiere la columna 'Estado' en los datos.")
-
 
 
 with col3:
@@ -198,7 +197,7 @@ with col3:
                 porcentaje = (valor / total) * 100
                 
                 fig = crear_medidor(porcentaje, metrica.capitalize(), color)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
         else:
             st.warning("El valor 'Total' en la hoja 'Web' es 0 o no se encontró.")
     else:
@@ -278,6 +277,43 @@ with col1:
     else:
         st.info("No se encontró la columna de media de costos.")
 
+    if not df_gauges_data.empty and 'Modelo' in df_gauges_data.columns and 'Obsolecencia' in df_gauges_data.columns:
+        CONTAINER_STYLE = (
+            "background-color: #0E1117; border-radius: 10px; padding: 12px; "
+            "text-align: left; max-height: 250px; overflow-y: auto; margin-top:10px;"
+        )
+        MODELO_SPAN_STYLE = "color: #ffffff; font-weight: 700; font-size: 15px; margin-right:8px;"
+        OBS_TEXT_STYLE = "color: #00FF88; font-size: 15px; font-weight: bold;"
+        OBS_TEXT_STYLE_OBSOLETE = "color: #FF4C4C; font-size: 15px; font-weight: bold;"
+        ROW_PADDING = "margin: 6px 0;"
+
+        texto_html = '<p style="font-size: 17px;">Modelos Activos</p>'
+        for _, row in df_gauges_data.iterrows():
+            modelo_val = "" if pd.isna(row['Modelo']) else str(row['Modelo'])
+            obs_val = "" if pd.isna(row['Obsolecencia']) else str(row['Obsolecencia'])
+            modelo_val = modelo_val.replace("<", "&lt;").replace(">", "&gt;")
+            obs_val = obs_val.replace("<", "&lt;").replace(">", "&gt;")
+
+            obs_style = OBS_TEXT_STYLE_OBSOLETE if obs_val.strip().lower() == "obsoleto" else OBS_TEXT_STYLE
+
+            texto_html += (
+                f'<div style="{ROW_PADDING}">'
+                f'  <span style="{MODELO_SPAN_STYLE}">{modelo_val}</span>'
+                f'  <span style="{obs_style}">{obs_val}</span>'
+                f'</div>'
+            )
+        st.markdown(
+            f"""
+            <div style="{CONTAINER_STYLE}">
+                {texto_html}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.info("La hoja 'Web' no contiene las columnas 'Modelo' y 'Obsolecencia'.")
+
+    st.markdown("# ")
     activos = 0
     if not df_gauges_data.empty and 'Etiqueta' in df_gauges_data.columns and 'Equipos' in df_gauges_data.columns:
         activos_series = df_gauges_data[
@@ -351,6 +387,7 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
+
 
 
 
