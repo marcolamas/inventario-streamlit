@@ -223,9 +223,10 @@ custom_css = {
 }
 
 AgGrid(
-    df_filtrado, gridOptions=gridOptions, update_mode=GridUpdateMode.NO_UPDATE, editable=False,
+    df_filtrado, gridOptions=gridOptions, update_mode=GridUpdateMode.MODEL_CHANGED,
     fit_columns_on_grid_load=False, allow_unsafe_jscode=False, theme="streamlit", height=700,
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     key=f"tabla_equipos_{st.session_state.filtro_activo}_{st.session_state.filtro_estado}",
     custom_css=custom_css
+
 )
