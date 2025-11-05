@@ -1,7 +1,8 @@
-streamlit
+streamlit==1.49.1
 pandas
 plotly
 gspread
 google-auth
 streamlit-aggrid
 oauth2client
+
