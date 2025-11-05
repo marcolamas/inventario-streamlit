@@ -1,7 +1,8 @@
 streamlit
-streamlit-aggrid
-gspread
-oauth2client
 pandas
 plotly
+gspread
 google-auth
+streamlit-aggrid
+oauth2client
+st-aggrid
