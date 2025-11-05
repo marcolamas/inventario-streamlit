@@ -39,7 +39,7 @@ st.markdown("""
 esp1, menu1, menu2, esp2 = st.columns([.01, 2, 2, 4])
 with menu1:
     if st.button("💻Equipos de computo", use_container_width=True):
-        st.switch_page("app.py")
+        st.switch_page("app")
 with menu2:
     if st.button("📱Equipos teléfonicos", use_container_width=True):
         st.rerun()
@@ -71,14 +71,12 @@ SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1hUDaaqzQ_LKT71YTTwwyR
 SHEET_TABLE = "Hoja 1" 
 SHEET_GAUGES = "Web"
 
-@st.cache_data(ttl=1000)
+@st.cache_data(ttl=300)
 def load_all_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive.readonly"]
         creds_dict = st.secrets["gcp_service_account"]
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-        client = gspread.authorize(creds)
-        ws = client.open_by_url(SPREADSHEET_URL).worksheet(SHEET_TABLE)
         client = gspread.authorize(creds)
         spreadsheet = client.open_by_url(SPREADSHEET_URL)
 
@@ -136,7 +134,7 @@ df_table, df_gauges_data = load_all_data()
 st.markdown(
     "<p style='margin-left:18px;'>Resumen de líneas ACTIVAS</p>",
     unsafe_allow_html=True
-)
+)   
 col1, col2, col3 = st.columns([2, 3, 2])
 with col2:
     if not df_table.empty and 'Estado' in df_table.columns:
@@ -246,7 +244,7 @@ with col1:
     if total_plan_servicios is not None:
         st.markdown(
             f"""
-            <div style="background-color: #0E1117; border-radius: 10px; padding: 15px; text-align: left;">
+            <div style="border-radius: 10px; padding: 15px; text-align: left;">
                 <p style="color: white; font-size: 15px; margin-bottom: 0px;">
                     Costo total de Planes y Servicios contratados
                 </p>
@@ -263,7 +261,7 @@ with col1:
     if media_plan_servicios is not None:
         st.markdown(
             f"""
-            <div style="background-color: #0E1117; border-radius: 10px; padding: 15px; text-align: left;">
+            <div style="border-radius: 10px; padding: 15px; text-align: left;">
                 <p style="color: white; font-size: 15px; margin-bottom: 0px;">
                     Media de gasto por Línea
                 </p>
@@ -279,7 +277,7 @@ with col1:
 
     if not df_gauges_data.empty and 'Modelo' in df_gauges_data.columns and 'Obsolecencia' in df_gauges_data.columns:
         CONTAINER_STYLE = (
-            "background-color: #0E1117; border-radius: 10px; padding: 12px; "
+            "border-radius: 10px; padding: 12px; "
             "text-align: left; max-height: 250px; overflow-y: auto; margin-top:10px;"
         )
         MODELO_SPAN_STYLE = "color: #ffffff; font-weight: 700; font-size: 15px; margin-right:8px;"
@@ -327,7 +325,7 @@ with col1:
 
     st.markdown(
         f"""
-        <div style="background-color: #0E1117; border-radius: 10px; padding: 10px; text-align: left;">
+        <div style="border-radius: 10px; padding: 10px; text-align: left;">
             <p style="color: white; font-size: 14px; margin: 0;">
                 Total de equipos activos:
                 <span style="color:#13C3E8; font-weight:bold; font-size:18px;"> {activos}</span>
@@ -387,13 +385,3 @@ AgGrid(
     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
     custom_css=custom_css
 )
-
-
-
-
-
-
-
-
-
-
